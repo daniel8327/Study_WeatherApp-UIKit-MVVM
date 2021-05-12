@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LocationCell" rowHeight="100" id="DAn-kz-iaX" customClass="LocationCell" customModule="WeatherMVVM" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="439" height="105"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DAn-kz-iaX" id="xZa-hh-kWu">
+                <rect key="frame" x="0.0" y="0.0" width="439" height="105"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yI8-i1-6bz">
+                        <rect key="frame" x="8" y="8" width="423" height="89"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="22:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LWo-jA-j1g">
+                                <rect key="frame" x="20" y="20.5" width="47.5" height="21.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="대한민국" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ole-V1-BIe">
+                                <rect key="frame" x="20" y="42" width="76.5" height="26.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20℃" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jsM-2r-Ze8">
+                                <rect key="frame" x="311.5" y="20.5" width="91.5" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <size key="shadowOffset" width="0.0" height="0.0"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="card"/>
+                        <constraints>
+                            <constraint firstItem="jsM-2r-Ze8" firstAttribute="centerY" secondItem="yI8-i1-6bz" secondAttribute="centerY" id="8dv-NP-9kt"/>
+                            <constraint firstItem="LWo-jA-j1g" firstAttribute="top" relation="greaterThanOrEqual" secondItem="yI8-i1-6bz" secondAttribute="top" constant="16" id="CO5-8m-UeR"/>
+                            <constraint firstItem="jsM-2r-Ze8" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ole-V1-BIe" secondAttribute="trailing" constant="8" id="IgK-zV-OxE"/>
+                            <constraint firstItem="LWo-jA-j1g" firstAttribute="top" secondItem="jsM-2r-Ze8" secondAttribute="top" id="Klx-tg-knk"/>
+                            <constraint firstAttribute="trailing" secondItem="jsM-2r-Ze8" secondAttribute="trailing" constant="20" id="MWv-Uh-e0o"/>
+                            <constraint firstItem="LWo-jA-j1g" firstAttribute="leading" secondItem="yI8-i1-6bz" secondAttribute="leading" constant="20" id="Myj-O0-aUQ"/>
+                            <constraint firstItem="Ole-V1-BIe" firstAttribute="leading" secondItem="LWo-jA-j1g" secondAttribute="leading" id="Oy4-eK-otG"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Ole-V1-BIe" secondAttribute="bottom" constant="16" id="PR6-Kc-cMx"/>
+                            <constraint firstItem="Ole-V1-BIe" firstAttribute="bottom" secondItem="jsM-2r-Ze8" secondAttribute="bottom" id="Vye-rA-RZa"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="isHiddenWhenSkeletonIsActive" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="yI8-i1-6bz" secondAttribute="bottom" constant="8" id="9zC-MJ-dnM"/>
+                    <constraint firstAttribute="trailing" secondItem="yI8-i1-6bz" secondAttribute="trailing" constant="8" id="SCV-Om-XVE"/>
+                    <constraint firstItem="yI8-i1-6bz" firstAttribute="leading" secondItem="xZa-hh-kWu" secondAttribute="leading" constant="8" id="d1s-4K-luQ"/>
+                    <constraint firstItem="yI8-i1-6bz" firstAttribute="top" secondItem="xZa-hh-kWu" secondAttribute="top" constant="8" id="dwI-nh-R53"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="containerView" destination="yI8-i1-6bz" id="RLj-GO-kTU"/>
+                <outlet property="locationName" destination="Ole-V1-BIe" id="DkQ-ED-mir"/>
+                <outlet property="temperature" destination="jsM-2r-Ze8" id="72A-Lj-LcV"/>
+                <outlet property="time" destination="LWo-jA-j1g" id="e1y-9a-Rn4"/>
+            </connections>
+            <point key="canvasLocation" x="205.07246376811597" y="39.84375"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="card">
+            <color red="0.94300001859664917" green="0.94300001859664917" blue="0.94300001859664917" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
