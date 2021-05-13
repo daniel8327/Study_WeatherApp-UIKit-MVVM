@@ -143,11 +143,34 @@ class DetailWeatherPageVC: UIViewController {
     }
     
     @objc func addLocation() {
-        let vc = LocationsVC()
         
-        vc.modalClosedAlias = { index, items in
+        let viewModel = LocationViewModel(storage: LocationStore())
+        let vc = LocationsVC(viewModel: viewModel)
+        
+        vc.modalClosedAlias = { index in
             self.index = index
+            //self.items = items
+            
+            // 조회
+            let result = CoreDataHelper.fetch()
+            
+            var items: [LocationVO] = []
+            
+            _ = result.map {
+                items.append(
+                    LocationVO(
+                        currentArea: $0.value(forKey: "currentArea") as! Bool,
+                        city: $0.value(forKey: "city") as! String,
+                        code: $0.value(forKey: "code") as! String,
+                        longitude: $0.value(forKey: "longitude") as! String,
+                        latitude: $0.value(forKey: "latitude") as! String,
+                        recent_temp: $0.value(forKey: "recent_temp") as? Int,
+                        timezone: $0.value(forKey: "timezone") as! Int64
+                    )
+                )
+            }
             self.items = items
+            
             self.checkItems()
         }
         

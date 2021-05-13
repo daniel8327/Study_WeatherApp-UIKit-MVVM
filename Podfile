@@ -9,6 +9,7 @@ target 'WeatherMVVM' do
 
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'RxDataSource'
 
   target 'WeatherMVVMTests' do
     inherit! :search_paths
