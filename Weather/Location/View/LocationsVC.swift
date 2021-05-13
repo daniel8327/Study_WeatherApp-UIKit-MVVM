@@ -12,6 +12,7 @@ import Alamofire
 import SwiftyJSON
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 typealias ModalClosedAlias = (Int)-> Void
 
@@ -119,12 +120,9 @@ class LocationsVC: UIViewController {
         // Do any additional setup after loading the view.
         
         //viewModel.items
-            
-        
         setRx()
         
         view.backgroundColor = .systemBackground
-        
         
         // 아이폰 설정에서의 위치 서비스가 켜진 상태라면
         if CLLocationManager.locationServicesEnabled() {
@@ -138,7 +136,7 @@ class LocationsVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        print("viewDidapper")
     }
     
     // MARK: Selectors
@@ -203,7 +201,7 @@ class LocationsVC: UIViewController {
         if let currentArea = CoreDataHelper.fetchByCurrent() {
             CoreDataHelper.delete(object: currentArea)
             
-            _ = viewModel.storage.locationList() // 재조회
+            viewModel.fetchLocationList() // 재조회
         }
     }
     
@@ -213,6 +211,32 @@ class LocationsVC: UIViewController {
         
         self.tableView.rowHeight = 100
         
+        let dataSource = RxTableViewSectionedReloadDataSource<SectionOfLocation>(
+          configureCell: { dataSource, tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: LocationCell.reusableIdentifier, for: indexPath) as? LocationCell else { fatalError() }
+            
+            cell.separatorInset = UIEdgeInsets.zero // https://zeddios.tistory.com/235
+            
+            cell.itemObserver.onNext(item)
+            return cell
+        })
+        
+        // 처음값 초기화
+        viewModel.fetchLocationList()
+        
+        dataSource.canEditRowAtIndexPath = { dataSource, indexPath in
+          return true
+        }
+
+        dataSource.canMoveRowAtIndexPath = { dataSource, indexPath in
+          return true
+        }
+        
+        // binding
+        viewModel.subject
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+
         
         tableView
             .rx.itemSelected
@@ -223,59 +247,6 @@ class LocationsVC: UIViewController {
                 self.dismiss(animated: true)
             })
             .disposed(by: disposeBag)
-
-        viewModel.items
-            .debug("list")
-            .bind(
-                to: tableView
-                    .rx
-                    .items(
-                        cellIdentifier: LocationCell.reusableIdentifier,
-                        cellType: LocationCell.self
-                    )
-            )
-            { _, record, cell in
-                
-                cell.separatorInset = UIEdgeInsets.zero // https://zeddios.tistory.com/235
-                
-                print("111: \(record.city) \(record.currentArea)")
-                
-                cell.locationName.text = record.city
-                
-                if let temp = record.recent_temp {
-                    cell.temperature.text = "\(temp)\(fahrenheitOrCelsius.emoji)"
-                } else {
-                    cell.temperature.text = "--\(fahrenheitOrCelsius.emoji)"
-                }
-                
-                let df = DateFormatter()
-                df.calendar = Calendar(identifier: .iso8601)
-                df.timeZone = TimeZone(secondsFromGMT: Int(record.timezone))
-                df.locale = Locale(identifier: UICommon.getLanguageCountryCode())
-                df.dateFormat = "a hh:mm"
-                
-                cell.time.text = df.string(from: Date())
-                
-                let param: [String: Any] = ["lat": record.latitude,
-                                            "lon": record.longitude]
-                
-                API.init(session: Session.default)
-                    .request(
-                        API.WEATHER,
-                        method: .get,
-                        parameters: param,
-                        encoding: URLEncoding.default,
-                        headers: nil,
-                        interceptor: nil,
-                        requestModifier: nil
-                    ) { json in
-                        let temp = json["main"]["temp"].intValue
-                        cell.temperature.fadeTransition(0.8)
-                        cell.temperature.text = "\(temp)\(fahrenheitOrCelsius.emoji)"
-                        
-                        CoreDataHelper.editByCode(cityCode: json["id"].stringValue, temperature: temp)
-                    }
-            }.disposed(by: disposeBag)
     }
 }
 
@@ -337,8 +308,7 @@ extension LocationsVC: CLLocationManagerDelegate {
                         object: prevLocation,
                         location: locationVO
                     )
-                    
-                    _ = self?.viewModel.storage.locationList() // 재조회
+                    self?.viewModel.fetchLocationList() // 재조회
                 }
         default:
             removeCurrentData()
@@ -350,25 +320,6 @@ extension LocationsVC: SaveLocationDelegate {
     func requestSave(vo: LocationVO) {
         
         CoreDataHelper.save(object: nil, location: vo)
-        _ = viewModel.storage.locationList() // 재조회
-    }
-}
-extension LocationsVC {
-    static func dataSource() -> RxTableViewSectionedAnimatedDataSource<NumberSection> {
-        return RxTableViewSectionedAnimatedDataSource(
-            animationConfiguration: AnimationConfiguration(
-                insertAnimation: .top, reloadAnimation: .fade, deleteAnimation: .left
-            ),
-            configureCell: { (dataSource, table, idxPath, item) in
-                let cell = table.dequeueReusableCell(withIdentifier: "Cell", for: idxPath)
-                cell.textLabel?.text = "\(item)" return cell
-            }, titleForHeaderInSection: { (ds, section) -> String? in
-                return ds[section].header
-            }, canEditRowAtIndexPath: { _, _ in return true
-                
-            }, canMoveRowAtIndexPath: { _, _ in return true
-                
-            }
-        )
+        viewModel.fetchLocationList() // 재조회
     }
 }

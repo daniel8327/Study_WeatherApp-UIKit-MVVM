@@ -144,7 +144,7 @@ class DetailWeatherPageVC: UIViewController {
     
     @objc func addLocation() {
         
-        let viewModel = LocationViewModel(storage: LocationStore())
+        let viewModel = LocationViewModel()
         let vc = LocationsVC(viewModel: viewModel)
         
         vc.modalClosedAlias = { index in
