@@ -12,14 +12,35 @@ import RxCocoa
 
 class LocationViewModel {
     
+    let fahrenheitOrCelsiusRx: BehaviorRelay = BehaviorRelay(value: fahrenheitOrCelsius)
+    
     internal private(set) var subject: BehaviorRelay<[SectionOfLocation]> = BehaviorRelay(value: [])
+    
+    lazy var items: [LocationVO] = {
+       
+        var vos = [LocationVO]()
+        vos.removeAll()
+        
+        return vos
+    }()
+    
+    init() {
+        //fahrenheitOrCelsiusRx = Observable.of(fahrenheitOrCelsius)
+        
+//        fahrenheitOrCelsiusRx = Observable<FahrenheitOrCelsius>.create { observer -> Disposable in
+//            observer.onNext(fahrenheitOrCelsius)
+//            return Disposables.create()
+//        }
+        
+        
+    }
 
     func fetchLocationList() {
         
         // 조회
         let result = CoreDataHelper.fetch()
         
-        var items: [LocationVO] = []
+        items.removeAll()
         
         _ = result.map {
             items.append(
@@ -34,6 +55,7 @@ class LocationViewModel {
                 )
             )
         }
+        
         subject.accept([SectionOfLocation(items: items)])
     }
 }

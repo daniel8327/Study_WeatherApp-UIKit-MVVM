@@ -118,7 +118,6 @@ class LocationsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
         //viewModel.items
         setRx()
         
@@ -137,6 +136,7 @@ class LocationsVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         print("viewDidapper")
+        checkLocations()
     }
     
     // MARK: Selectors
@@ -144,26 +144,11 @@ class LocationsVC: UIViewController {
     /// 섭씨/화씨 전환
     @objc func changeNotation() {
         
+        print("fahrenheitOrCelsiusRx? 1 \(fahrenheitOrCelsius)")
         fahrenheitOrCelsius = (fahrenheitOrCelsius == FahrenheitOrCelsius.Celsius) ? .Fahrenheit : .Celsius
+        print("fahrenheitOrCelsiusRx? 2 \(fahrenheitOrCelsius)")
         
-        // footer 바꾸기
-        let footer = self.tableView.tableFooterView as! LocationFooter
-        
-        let attributeString = NSMutableAttributedString(string: footer.notation.text ?? "")
-        
-        let str = footer.notation.text!
-        
-        let r1 = str.range(of: fahrenheitOrCelsius.emoji)!
-        // String range to NSRange:
-        let n1 = NSRange(r1, in: str)
-        
-        attributeString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: n1)
-
-        footer.notation.attributedText = attributeString
-        
-        // 전체 리스트 바꾸기
-        //tableView.reloadData()
-        UIView.transition(with: self.tableView, duration: 1.0, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+        viewModel.fahrenheitOrCelsiusRx.accept(fahrenheitOrCelsius)
     }
     
     /// 도시 추가
@@ -180,19 +165,21 @@ class LocationsVC: UIViewController {
     /// 도시 추가 확인
     func checkLocations() {
         
-//        // 설정된 도시 없으면 물어보기
-//        if viewModel.items.emp {
-//            let alert = UIAlertController(title: "지역 선택", message: "날씨 정보를 받아볼 지역을 검색하세요.", preferredStyle: .alert)
-//            let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
-//                self.addLocation()
-//            }
-//            //let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-//
-//            alert.addAction(confirmAction)
-//            //alert.addAction(cancelAction)
-//
-//            self.present(alert, animated: true)
-//        }
+        // 설정된 도시 없으면 물어보기
+        if viewModel.items.count == 0 {
+            print("viewModel.subject.value.count")
+            let alert = UIAlertController(title: "지역 선택", message: "날씨 정보를 받아볼 지역을 검색하세요.", preferredStyle: .alert)
+            let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+                self.addLocation()
+            }
+            //let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+
+            alert.addAction(confirmAction)
+            //alert.addAction(cancelAction)
+
+            self.present(alert, animated: true)
+            print("viewModel.subject.value.count")
+        }
     }
     
     /// 현위치 저장 내역 삭제
@@ -247,6 +234,55 @@ class LocationsVC: UIViewController {
                 self.dismiss(animated: true)
             })
             .disposed(by: disposeBag)
+        
+        viewModel.fahrenheitOrCelsiusRx
+            .debug("fahrenheitOrCelsiusRx emit!")
+            .subscribe(onNext: { [weak self] notation in
+                guard let `self` = self else { return }
+                
+                // footer 바꾸기
+                let footer = self.tableView.tableFooterView as! LocationFooter
+                
+                let attributeString = NSMutableAttributedString(string: footer.notation.text ?? "")
+                
+                let str = footer.notation.text!
+                
+                let r1 = str.range(of: fahrenheitOrCelsius.emoji)!
+                // String range to NSRange:
+                let n1 = NSRange(r1, in: str)
+                
+                attributeString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: n1)
+
+                footer.notation.attributedText = attributeString
+                
+                // 전체 리스트 바꾸기
+                //tableView.reloadData()
+                UIView.transition(with: self.tableView, duration: 1.0, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+            })
+            .disposed(by: disposeBag)
+        
+        /*
+         
+         
+         // footer 바꾸기
+         let footer = self.tableView.tableFooterView as! LocationFooter
+         
+         let attributeString = NSMutableAttributedString(string: footer.notation.text ?? "")
+         
+         let str = footer.notation.text!
+         
+         let r1 = str.range(of: fahrenheitOrCelsius.emoji)!
+         // String range to NSRange:
+         let n1 = NSRange(r1, in: str)
+         
+         attributeString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: n1)
+
+         footer.notation.attributedText = attributeString
+         
+         // 전체 리스트 바꾸기
+         //tableView.reloadData()
+         UIView.transition(with: self.tableView, duration: 1.0, options: .transitionCrossDissolve, animations: {self.tableView.reloadData()}, completion: nil)
+         */
     }
 }
 
